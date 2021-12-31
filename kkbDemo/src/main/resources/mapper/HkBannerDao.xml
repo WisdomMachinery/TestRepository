@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kkb.hk.dao.HkBannerDao">
+
+    <resultMap type="com.kkb.hk.vo.response.banner.HkBannerResponse" id="HkBannerResponseMap">
+        <result property="bannerId" column="banner_id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="image" column="image" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+        <result property="updatedBy" column="updated_by" jdbcType="VARCHAR"/>
+        <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询banner列表数据-->
+    <select id="qryList" resultMap="HkBannerResponseMap">
+        select
+        banner_id, title, description, image, url
+        from hk_banner where status=0
+        <if test="title != null">
+            and title like CONCAT('%',#{title},'%')
+        </if>
+        order by sort asc,banner_id desc
+    </select>
+
+    <!--查询banner列表分页数据-->
+    <select id="qryListByPage" resultMap="HkBannerResponseMap">
+        select
+        banner_id, title, description, image, url
+        from hk_banner where status=0
+        <if test="title != null">
+            and title like CONCAT('%',#{title},'%')
+        </if>
+        order by sort asc,banner_id desc
+    </select>
+
+
+    <!--新增banner列表数据-->
+    <insert id="addList" parameterType="com.kkb.hk.entity.HkBanner">
+        insert into hk_banner (title,description,image,url,status,sort,created_by,created_time,updated_by,updated_time)
+        values(#{title},#{description},
+               #{image},#{url},#{status},
+               #{sort},#{createdBy},#{createdTime},
+               #{updatedBy},#{updatedTime})
+    </insert>
+
+    <!--根据id删除banner列表数据-->
+    <delete id="deleteHkBanner" parameterType="int">
+        delete from hk_banner where banner_id = #{id}
+    </delete>
+    <!--修改banner列表数据-->
+    <update id="updateHkBanner" parameterType="com.kkb.hk.entity.HkBanner">
+        update hk_banner set title= #{title},description = #{description} where banner_id =#{bannerId}
+    </update>
+    <!--根据id查询banner列表数据-->
+    <select id="findHkBannerById" parameterType="int" resultType="com.kkb.hk.entity.HkBanner">
+        select * from hk_banner where banner_id = #{id}
+    </select>
+
+</mapper>
+
